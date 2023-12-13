@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Form, NgForm } from '@angular/forms';
 import { Post } from 'src/app/shared/post.model';
+import { PostService } from 'src/app/shared/post.service';
 
 @Component({
   selector: 'app-post-create',
@@ -14,18 +15,14 @@ import { Post } from 'src/app/shared/post.model';
   styleUrls: ['./post-create.component.css'],
 })
 export class PostCreateComponent implements OnInit {
-  @Output() post = new EventEmitter<Post>();
-
-  constructor() {}
+  constructor(private postSrv: PostService) {}
 
   ngOnInit(): void {}
   onAddPost(form: NgForm) {
     const post: Post = { title: form.value.title, content: form.value.content };
-    this.post.emit(post);
-
-    // title.value = '';
-    // content.value = '';
-    // form.resetForm();
+    if (!form.valid) return;
+    this.postSrv.addPost(post);
     console.log(form.value);
+    form.resetForm();
   }
 }

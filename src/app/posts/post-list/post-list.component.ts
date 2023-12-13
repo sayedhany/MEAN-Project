@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Post } from 'src/app/shared/post.model';
+import { PostService } from 'src/app/shared/post.service';
 
 @Component({
   selector: 'app-post-list',
@@ -7,8 +9,20 @@ import { Post } from 'src/app/shared/post.model';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent implements OnInit {
-  @Input() posts: Post[];
-  constructor() {}
+  posts: Post[];
+  private sub: Subscription;
+  constructor(private postSrv: PostService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.posts = this.postSrv.getPosts();
+    this.sub = this.postSrv.getPostUpdateList().subscribe((posts) => {
+      this.posts = posts;
+    });
+  }
+  onDeletePost(post) {
+    this.postSrv.deletePost(post);
+  }
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 }

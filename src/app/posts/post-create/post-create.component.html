@@ -2,11 +2,13 @@
   <form #postFrom="ngForm" (submit)="onAddPost(postFrom)">
 
     <mat-form-field>
-      <input type="text" ngModel name="title" matInput placeholder="Enter title...">
+      <input type="text" #title="ngModel" required="true" ngModel name="title" matInput placeholder="Enter title...">
     </mat-form-field>
+    <mat-error  style="margin-bottom: 1rem" *ngIf="(postFrom.submitted && title.invalid) || (title.touched && title.invalid)">Title is Required</mat-error>
     <mat-form-field>
-      <textarea matInput ngModel name="content" rows="6" placeholder="Enter content..." ></textarea>
+      <textarea matInput #content="ngModel" required ngModel name="content" rows="6" placeholder="Enter content..." ></textarea>
     </mat-form-field>
+    <mat-error  style="margin-bottom: 1rem" *ngIf="(postFrom.submitted && content.invalid) || (content.touched && content.invalid)">Content is Required</mat-error>
     <button mat-raised-button type="submit" color="accent">Save Post</button>
   </form>
 </mat-card>
